@@ -21,13 +21,14 @@ def play_sound(sound_file):
         executing process
 
     """
-    p = subprocess.Popen(['mpg123',
+    p = subprocess.Popen(['mpg123', # The program to launch in the subprocess
                           '-C',     # Enable commands to be read from stdin
-                          '-q',     # Suppress header output when playback 
-                                    # begins
-                        sound_file],
-                        stdin=subprocess.PIPE,
-                        stdout=subprocess.PIPE,stderr=None)
+                          '-q',     # Be quiet
+                          sound_file],
+                        stdin=subprocess.PIPE, # Pipe input via bytes
+                        stdout=None,   
+                        stderr=None)
+    
     return p
 
 if __name__ == '__main__':
@@ -37,32 +38,34 @@ if __name__ == '__main__':
 
     # Sleep here for 4 seconds. Notice that the external process that plays 
     # the mp3 is unaffected by this and continues to play. 
-    time.sleep(4)
+    time.sleep(2)
 
-    # After playing for 4 seconds, write a character 's' to the external
-    # process using the stdin stream to that process.
+    # After playing for 2 seconds, write a byte b's' to the external
+    # process mpg123 using the stdin stream to that process.
+    #
+    # Notice that sending to the process uses bytes rather than characters
     p.stdin.write(b's')
     p.stdin.flush()
-
-    print('Playback is stopped briefly')
     
-    # Sleep here while playback is stopped. The external process is still 
+    print(' Playback is stopped briefly.')
+    
+    # Sleep here while playback is stopped. The process mpg123 is still 
     # running, it's just stopped until we restart it.
-    time.sleep(4)
+    time.sleep(2)
 
-    # After pausing playback for 4 seconds, write another character 's' to the
+    # After pausing playback for 2 seconds, write another character 's' to the
     # external process using the stdin stream to that process. Note that 's' is
-    # a toggling command. First it stops, then it starts playback.
+    # a toggling command. 
     p.stdin.write(b's')
     p.stdin.flush()
 
-
-    print('Playback has restarted. After 10 seconds, quit playback of this file.')
-    time.sleep(10)
+    print('Playback has restarted. After 2 seconds, quit playback of this file.')
+ 
+    time.sleep(2)
     p.stdin.write(b'q')
     p.stdin.flush()
 
-    print('We have quit playing back the mp3. The external process has ended.')
+    print('We have quit playing the mp3. The external process has ended.')
 
     # Instead of using 'q' to quit and end the player process, you can call terminate()
     # as seen below. This sends a SIGTERM from the OS to the process, ending it.
