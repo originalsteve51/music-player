@@ -163,7 +163,7 @@ def main():
     """
     player = MusicPlayer()
 
-    player.play('./1968_top_ten/mony.mp3')
+    player.play('./my_mp3_files/fluidity-100-ig-edit-4558.mp3')
     print(f'Player is playing: {player.is_playing()}')
     print('Play for 2 seconds')
     time.sleep(2)
@@ -180,10 +180,16 @@ def main():
     print(f'Player is playing: {player.is_playing()}')
     print(f'Return code: {player.return_code()}')
 
-    player.play('./1968_top_ten/grazing.mp3')
+    player.play('./my_mp3_files/this-minimal-technology-12327.mp3')
+
+    # Play a track until it finishes, ending the player subprocess when it does.
+    # Keep the Python process running until the track ends.
+    print('The Python program will keep running until it sees subprocess completion.')
+    progress_indicator = '*'
     while player.is_playing():
         time.sleep(1)
-        print('*')
+        print(progress_indicator)
+        progress_indicator += '*'
 
 
 
